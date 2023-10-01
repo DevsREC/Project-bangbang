@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.community.netcode.extensions": {
-      "version": "file:C:/Users/venkatesh/Downloads/others/multiplayer-community-contributions/com.community.netcode.extensions",
+      "version": "file:multiplayer-community-contributions/com.community.netcode.extensions",
       "depth": 0,
       "source": "local",
       "dependencies": {
