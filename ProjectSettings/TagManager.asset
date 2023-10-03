@@ -44,3 +44,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Player
+    uniqueID: 1197382079
+    locked: 0
+  - name: Aim line
+    uniqueID: 1957432653
+    locked: 0
