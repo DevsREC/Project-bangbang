@@ -7,27 +7,7 @@ public class PlayerID : NetworkBehaviour
 {
     [SerializeField] private ulong id;
 
-    public override void OnNetworkSpawn()
-    {
-        base.OnNetworkSpawn();
-        if (IsOwner)
-        {
-            SendClientIDServerRPC();
-        }
-
-    }
-    [ServerRpc]
-    private void SendClientIDServerRPC(ServerRpcParams serverRpcParams = default)
-    {
-        AssignIDClientRPC(serverRpcParams.Receive.SenderClientId);
-    }
-
-    [ClientRpc]
-    private void AssignIDClientRPC(ulong value)
-    {
-        id = value;
-    }
-        public ulong ID
+    public ulong ID
     {
         get
         {
@@ -38,4 +18,27 @@ public class PlayerID : NetworkBehaviour
             id = value;
         }
     }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        //call the sendclientserverrpc function if it is the owner
+        if (IsOwner)
+        {
+            SendClientIDServerRPC();
+        }
+
+    }
+    [ServerRpc]
+    private void SendClientIDServerRPC(ServerRpcParams serverRpcParams = default)
+    {
+        AssignIDClientRPC(serverRpcParams.Receive.SenderClientId); //sends the cliendID as parameter to the function
+    }
+
+    [ClientRpc]
+    private void AssignIDClientRPC(ulong value)
+    {
+        id = value; //Assigns id value from serverrpc params 
+    }
+    
 }

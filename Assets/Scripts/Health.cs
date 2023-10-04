@@ -12,18 +12,20 @@ public class Health : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        health.OnValueChanged += HealthChanged;
+        health.OnValueChanged += HealthChanged; //Subscribing to the health variable's onvaluechanged event
         playerID = GetComponent<PlayerID>();
-        if(IsOwner) health.Value = maxHealth;
+        if(IsOwner) health.Value = maxHealth; //Assigns health value as max (as it is the health at spawn)
     }
 
     public void UpdateHealth(float value,ulong id)
     {
+        //decreases health when it is the owner and the player id doesnot match the bullet id (health will get updated to all clients as
+        //the health variable is synced so it is enough to change it only in the owner also only the owner can write to the variable)
         if(IsOwner && playerID.ID != id)
         {
             health.Value = health.Value - value;
         }
-        KillPlayer();
+        KillPlayer(); //checks whether the player's health is zero
     }
 
     private void KillPlayer()
@@ -34,6 +36,7 @@ public class Health : NetworkBehaviour
             DestroyPlayerServerRpc();
         }
     }
+    //For testing purpose
     private void HealthChanged(float previousValue , float newValue)
     {
         if(IsOwner)

@@ -11,4 +11,5 @@ public class GunSO : ScriptableObject
     public float fireRate=0.6f;
     public float reloadTime = 4f;
     public int magSize = 10;
+    public int totalBulletsLeft = 40;
 }

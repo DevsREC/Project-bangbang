@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//Added to all bullets
 public class Bullet : MonoBehaviour
 {
     private int damage;
     private ulong id;
+    private ushort lifeSpan = 10;
 
-    public ulong ID
+    public ulong ID //Id of the player who instantiated this bullet  
     {
         get
         {
@@ -19,7 +20,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public int Damage
+    public int Damage //Damage derived 
     {
         get
         {
@@ -33,7 +34,7 @@ public class Bullet : MonoBehaviour
     }
     private void Start()
     {
-        Destroy(gameObject, 10f);
+        Destroy(gameObject, lifeSpan);
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -48,7 +49,7 @@ public class Bullet : MonoBehaviour
         DamagePlayer(collision.gameObject);
     }
 
-    private void DestroyOnImpact(string tag)
+    private void DestroyOnImpact(string tag) //Destroys the bullet when it hits the ground or wall
     {
         if (tag == "Ground" || tag == "Wall")
         {
@@ -56,9 +57,9 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private void DamagePlayer(GameObject player)
+    private void DamagePlayer(GameObject player) //calls the function that reduces the players health
     {
-        player.TryGetComponent<Health>(out Health health);
+        player.TryGetComponent<Health>(out Health health); //assigns health variable the health component if there is a health component
         if (health != null) health.UpdateHealth(damage,id);
     }
 

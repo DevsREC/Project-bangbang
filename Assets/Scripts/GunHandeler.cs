@@ -13,28 +13,34 @@ public class GunHandeler : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        AssignValues();
+        GunSwap();
+    }
+
+    private void AssignValues()
+    {
         FindObjectOfType<ShootButton>().AssignValues();
         reload = GetComponent<Reload>();
-        GunSwap();
     }
 
     private void GunSwap()
     {
         reload.AssignMagSize(gunSO.magSize);
+        reload.TotalBullets = gunSO.totalBulletsLeft;
         reload.ReloadMag();
     }
     public void Shoot(Vector2 coordinates)
     {
-        if (!IsOwner) return;
-        if (reload.BulletCounter())
+        if (!IsOwner) return; //Returns when its not the owner
+        if (reload.BulletCounter()) //checks whether there is any bullet left
         {
-            StartCoroutine(DelayShooting(gunSO.fireRate));
-            ShootBulletServerRpc(coordinates);
+            StartCoroutine(DelayShooting(gunSO.fireRate)); //waits for firerate time
+            ShootBulletServerRpc(coordinates); //shoot server rpc
         }
         else
         {
-            StartCoroutine(DelayShooting(gunSO.reloadTime));
-            reload.ReloadMag();
+            StartCoroutine(DelayShooting(gunSO.reloadTime)); //waits for reload time
+            reload.ReloadMag(); // reloads the mag
         }
         
         //bulletRigidbody.AddForce(Vector2.up * UpwardForce, ForceMode2D.Impulse);
@@ -43,6 +49,7 @@ public class GunHandeler : NetworkBehaviour
 
     IEnumerator DelayShooting(float fireRate)
     {
+        //Delays Shooting
         canShoot = false;
         yield return new WaitForSecondsRealtime(fireRate);
         canShoot = true;
@@ -50,6 +57,7 @@ public class GunHandeler : NetworkBehaviour
 
     private void AssignBulletIDAndDamage(ulong value)
     {
+        //assigns bullet id and damage to the bullet script in the bullet instance
         bullet = bulletInstance.GetComponent<Bullet>();
         bullet.Damage = gunSO.damage;
         bullet.ID = value;
@@ -57,6 +65,7 @@ public class GunHandeler : NetworkBehaviour
 
     private void AssignBulletForce(Vector2 coordinates , GameObject bulletInstace)
     {
+        //Assigns intial force to the bullet
         bulletRigidbody = bulletInstance.GetComponent<Rigidbody2D>();
         bulletRigidbody.AddForce(coordinates * gunSO.bulletSpeed, ForceMode2D.Impulse);
     }
@@ -70,12 +79,21 @@ public class GunHandeler : NetworkBehaviour
     [ClientRpc]
     private void ShootBulletClientRpc(Vector2 coordinates,ulong clientId)
     {
+        Quaternion quaternion;
+        quaternion = CalculateAngle(coordinates);
+        bulletInstance = Instantiate(gunSO.bulletPrefab, transform.position,quaternion);
+        AssignBulletForce(coordinates,bulletInstance); //Assigns bullet's intial force
+        AssignBulletIDAndDamage(clientId); //Assigns bullet id and damage based on the current gunSO
+    }
+
+    private Quaternion CalculateAngle(Vector2 coordinates)
+    {
+        //Calculates the angle in which the bullet should be fired
         float angle = coordinates.y / coordinates.x;
         float zangle = Mathf.Atan(angle);
         Quaternion quaternion;
         quaternion = Quaternion.Euler(0f, 0f, zangle);
-        bulletInstance = Instantiate(gunSO.bulletPrefab, transform.position,quaternion);
-        AssignBulletForce(coordinates,bulletInstance);
-        AssignBulletIDAndDamage(clientId);
+        return quaternion;
+
     }
 }
