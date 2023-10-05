@@ -4,17 +4,28 @@ using UnityEngine;
 using Unity.Netcode;
 public class GunHandeler : NetworkBehaviour
 {
-    public GunSO gunSO;
+    private GunSO gunSO;
     private Rigidbody2D bulletRigidbody;
     private GameObject bulletInstance;
     private Bullet bullet;
     public bool canShoot = true;
     private Reload reload;
+    private bool gunSwapPossible = false;
+    [SerializeField] private GunSO tempGunSO;
+
+    public bool GunSwapPossible
+    {
+        get
+        {
+            return gunSwapPossible;
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
         AssignValues();
-        GunSwap();
+        if (IsOwner) { GunSwapServerRpc(); }       
+        //tempGunSO = null;
     }
 
     private void AssignValues()
@@ -22,16 +33,30 @@ public class GunHandeler : NetworkBehaviour
         FindObjectOfType<ShootButton>().AssignValues();
         reload = GetComponent<Reload>();
     }
-
-    private void GunSwap()
+    //GunSwap should be synced between all clients
+    [ServerRpc]
+    public void GunSwapServerRpc()
     {
+        GunSwapClientRpc();
+    }
+
+    [ClientRpc]
+    public void GunSwapClientRpc()
+    {
+        if (tempGunSO == null)
+        {
+            return;
+        }
+        gunSO = tempGunSO;
+        tempGunSO = null;
         reload.AssignMagSize(gunSO.magSize);
         reload.TotalBullets = gunSO.totalBulletsLeft;
         reload.ReloadMag();
     }
+
     public void Shoot(Vector2 coordinates)
     {
-        if (!IsOwner) return; //Returns when its not the owner
+        if (!IsOwner || gunSO == null) return; //Returns when its not the owner or when the player doesn't have a gun
         if (reload.BulletCounter()) //checks whether there is any bullet left
         {
             StartCoroutine(DelayShooting(gunSO.fireRate)); //waits for firerate time
@@ -42,8 +67,6 @@ public class GunHandeler : NetworkBehaviour
             StartCoroutine(DelayShooting(gunSO.reloadTime)); //waits for reload time
             reload.ReloadMag(); // reloads the mag
         }
-        
-        //bulletRigidbody.AddForce(Vector2.up * UpwardForce, ForceMode2D.Impulse);
 
     }
 
@@ -95,5 +118,23 @@ public class GunHandeler : NetworkBehaviour
         quaternion = Quaternion.Euler(0f, 0f, zangle);
         return quaternion;
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag.CompareTo("Gun") == 0)
+        {
+            gunSwapPossible = true;
+            tempGunSO = other.gameObject.GetComponent<Gun>().gunSO;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.tag.CompareTo("Gun") == 0)
+        {
+            gunSwapPossible = false;
+            tempGunSO = null;
+        }
     }
 }

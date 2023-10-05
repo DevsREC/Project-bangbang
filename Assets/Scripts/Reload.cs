@@ -20,12 +20,6 @@ public class Reload : MonoBehaviour
             totalBulletsLeft = value;
         }
     }
-    //For testing purpose
-    private void Update()
-    {
-        Debug.Log(totalBulletsLeft);
-        Debug.Log(bulletsLeftInLoad);
-    }
 
     public bool BulletCounter()
     {
