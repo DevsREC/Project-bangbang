@@ -13,6 +13,7 @@ public class GunHandeler : NetworkBehaviour
     private bool gunSwapPossible = false;
     [SerializeField] private GunSO tempGunSO;
     private GunInterface gunInstance;
+    private GameObject gunObject;
 
     public bool GunSwapPossible
     {
@@ -38,17 +39,20 @@ public class GunHandeler : NetworkBehaviour
     [ServerRpc]
     public void GunSwapServerRpc()
     {
+        //gunObject.GetComponent<NetworkObject>().Despawn();
         GunSwapClientRpc();
+
     }
 
     [ClientRpc]
     public void GunSwapClientRpc()
-    {
+    {        
         if (tempGunSO == null)
         {
             return;
         }
         gunSO = tempGunSO;
+        Destroy(gunObject);
         tempGunSO = null;
         AssignGunInstance();         
         reload.AssignMagSize(gunSO.magSize);
@@ -120,7 +124,8 @@ public class GunHandeler : NetworkBehaviour
         if (other.gameObject.tag.CompareTo("Gun") == 0)
         {
             gunSwapPossible = true;
-            tempGunSO = other.gameObject.GetComponent<Gun>().gunSO;
+            gunObject = other.gameObject;
+            tempGunSO = gunObject.GetComponent<Gun>().gunSO;
         }
     }
 
