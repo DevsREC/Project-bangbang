@@ -5,13 +5,14 @@ using Unity.Netcode;
 public class GunHandeler : NetworkBehaviour
 {
     private GunSO gunSO;
-    private Rigidbody2D bulletRigidbody;
+    //private Rigidbody2D bulletRigidbody;
     private GameObject bulletInstance;
-    private Bullet bullet;
+    //private Bullet bullet;
     public bool canShoot = true;
     private Reload reload;
     private bool gunSwapPossible = false;
     [SerializeField] private GunSO tempGunSO;
+    private GunInterface gunInstance;
 
     public bool GunSwapPossible
     {
@@ -49,9 +50,28 @@ public class GunHandeler : NetworkBehaviour
         }
         gunSO = tempGunSO;
         tempGunSO = null;
+        AssignGunInstance();         
         reload.AssignMagSize(gunSO.magSize);
         reload.TotalBullets = gunSO.totalBulletsLeft;
         reload.ReloadMag();
+    }
+
+    private void AssignGunInstance()
+    {
+        switch (gunSO.gunType)
+        {
+            case GunSO.GunType.NormalGun:
+                {
+                    gunInstance = new NormalGun(gunSO, this);
+                    break;
+                }
+            case GunSO.GunType.RocketLauncher:
+                {
+                    //Needs to be implemented
+                    //Create guninstance of RocketLauncher
+                    break;
+                }
+        }
     }
 
     public void Shoot(Vector2 coordinates)
@@ -78,20 +98,7 @@ public class GunHandeler : NetworkBehaviour
         canShoot = true;
     }
 
-    private void AssignBulletIDAndDamage(ulong value)
-    {
-        //assigns bullet id and damage to the bullet script in the bullet instance
-        bullet = bulletInstance.GetComponent<Bullet>();
-        bullet.Damage = gunSO.damage;
-        bullet.ID = value;
-    }
-
-    private void AssignBulletForce(Vector2 coordinates , GameObject bulletInstace)
-    {
-        //Assigns intial force to the bullet
-        bulletRigidbody = bulletInstance.GetComponent<Rigidbody2D>();
-        bulletRigidbody.AddForce(coordinates * gunSO.bulletSpeed, ForceMode2D.Impulse);
-    }
+    
     [ServerRpc]
     public void ShootBulletServerRpc(Vector2 coordinates,ServerRpcParams serverRpcParams = default)
     {
@@ -102,23 +109,11 @@ public class GunHandeler : NetworkBehaviour
     [ClientRpc]
     private void ShootBulletClientRpc(Vector2 coordinates,ulong clientId)
     {
-        Quaternion quaternion;
-        quaternion = CalculateAngle(coordinates);
-        bulletInstance = Instantiate(gunSO.bulletPrefab, transform.position,quaternion);
-        AssignBulletForce(coordinates,bulletInstance); //Assigns bullet's intial force
-        AssignBulletIDAndDamage(clientId); //Assigns bullet id and damage based on the current gunSO
+        gunInstance.Shoot(coordinates, clientId, transform.position);
+        //Shoot();
     }
 
-    private Quaternion CalculateAngle(Vector2 coordinates)
-    {
-        //Calculates the angle in which the bullet should be fired
-        float angle = coordinates.y / coordinates.x;
-        float zangle = Mathf.Atan(angle);
-        Quaternion quaternion;
-        quaternion = Quaternion.Euler(0f, 0f, zangle);
-        return quaternion;
-
-    }
+    
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -137,4 +132,50 @@ public class GunHandeler : NetworkBehaviour
             tempGunSO = null;
         }
     }
+
+    //Temporary methods
+
+    public GameObject InstantiateBullet(GameObject bulletPrefab, Vector3 position,Quaternion quaternion)
+    {
+        bulletInstance =  Instantiate(gunSO.bulletPrefab, transform.position, quaternion);
+        return bulletInstance;
+    }
+
+    //unused functions
+    /*
+    private Quaternion CalculateAngle(Vector2 coordinates)
+    {
+        //Calculates the angle in which the bullet should be fired
+        float angle = coordinates.y / coordinates.x;
+        float zangle = Mathf.Atan(angle);
+        Quaternion quaternion;
+        quaternion = Quaternion.Euler(0f, 0f, zangle);
+        return quaternion;
+
+    }
+
+    private void AssignBulletIDAndDamage(ulong value)
+    {
+        //assigns bullet id and damage to the bullet script in the bullet instance
+        bullet = bulletInstance.GetComponent<Bullet>();
+        bullet.Damage = gunSO.damage;
+        bullet.ID = value;
+    }
+
+    private void AssignBulletForce(Vector2 coordinates, GameObject bulletInstace)
+    {
+        //Assigns intial force to the bullet
+        Rigidbody2D bulletRigidbody = bulletInstance.GetComponent<Rigidbody2D>();
+        bulletRigidbody.AddForce(coordinates * gunSO.bulletSpeed, ForceMode2D.Impulse);
+    }
+    
+
+    private void Shoot()
+    {
+        Quaternion quaternion;
+        quaternion = CalculateAngle(coordinates);
+        bulletInstance = Instantiate(gunSO.bulletPrefab, transform.position,quaternion);
+        AssignBulletForce(coordinates,bulletInstance); //Assigns bullet's intial force
+        AssignBulletIDAndDamage(clientId); //Assigns bullet id and damage based on the current gunSO
+    }*/
 }

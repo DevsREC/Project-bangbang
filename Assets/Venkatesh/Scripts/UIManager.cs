@@ -7,12 +7,12 @@ public class UIManager : MonoBehaviour
     private GameObject localPlayer;
     private GunHandeler gunHandeler;
     [SerializeField] private GameObject swapButton;
-    private void AssignLocalPlayer()
+    /*private void AssignLocalPlayer()
     {   //Assigns localplayer and gunhandeler
         localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
         if (localPlayer == null) return;
         gunHandeler = localPlayer.GetComponent<GunHandeler>();
-    }
+    }*/
 
     private void Start()
     {

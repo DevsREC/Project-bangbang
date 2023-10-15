@@ -4,6 +4,12 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Gun")]
 public class GunSO : ScriptableObject
 {
+    public enum GunType
+    {
+        NormalGun,
+        RocketLauncher
+    }
+    public GunType gunType = GunType.NormalGun;
     public GameObject bulletPrefab;
     public float bulletSpeed = 30f;
     public float UpwardForce = 30f;
