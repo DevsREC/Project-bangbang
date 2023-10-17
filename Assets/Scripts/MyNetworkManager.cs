@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 public class MyNetworkManager : NetworkManager
 {
+    //public event Action onServerInitiated;
     private GameObject[] players;
     int localPlayerIndex;
     private GameObject localPlayer;

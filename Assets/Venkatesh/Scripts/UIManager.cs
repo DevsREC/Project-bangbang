@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,12 +15,13 @@ public class UIManager : MonoBehaviour
         gunHandeler = localPlayer.GetComponent<GunHandeler>();
     }*/
 
-    private void Start()
+    private void Awake()
     {
         //Starts a recusive coroutine that runs every two seconds until it finds a localplayer
-        StartCoroutine(CheckForPlayer());
+        //StartCoroutine(CheckForPlayer());
+        //NetworkManager.Singleton.OnServerStarted += AssignLocalPlayer;
+        NetworkManager.Singleton.OnClientConnectedCallback += AssignLocalPlayerForClients;
     }
-
     private void Update()
     {
         SwapButtonUpdateFunction();
@@ -84,4 +86,17 @@ public class UIManager : MonoBehaviour
         }
         
     }
+
+    //unused methods
+
+    private void AssignLocalPlayer()
+    {
+        localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
+    }
+
+    private void AssignLocalPlayerForClients(ulong a)
+    {
+        localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
+    }
+
 }
