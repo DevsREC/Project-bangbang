@@ -41,7 +41,7 @@ public class GunHandeler : NetworkBehaviour
     {
         //gunObject.GetComponent<NetworkObject>().Despawn();
         GunSwapClientRpc();
-
+        gunObject?.GetComponent<NetworkObject>().Despawn();
     }
 
     [ClientRpc]
@@ -52,7 +52,7 @@ public class GunHandeler : NetworkBehaviour
             return;
         }
         gunSO = tempGunSO;
-        Destroy(gunObject);
+        //Destroy(gunObject);
         tempGunSO = null;
         AssignGunInstance();         
         reload.AssignMagSize(gunSO.magSize);
