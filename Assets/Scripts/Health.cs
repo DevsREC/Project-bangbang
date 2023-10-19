@@ -30,7 +30,7 @@ public class Health : NetworkBehaviour
 
     private void KillPlayer()
     {
-        if(health.Value <= 0)
+        if(health.Value <= 0 && IsOwner)
         {
             Debug.Log("I died "+ playerID);
             DestroyPlayerServerRpc();
@@ -46,7 +46,11 @@ public class Health : NetworkBehaviour
     [ServerRpc]
     private void DestroyPlayerServerRpc(ServerRpcParams serverRpcParams = default)
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        var clientId = serverRpcParams.Receive.SenderClientId;
+        gameObject.GetComponent<NetworkObject>().Despawn(true);
+        PlayerSpawner.instance.StartSpawn(clientId);
+        Debug.Log("spawn is initiated in health");
     }
 }
 

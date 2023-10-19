@@ -34,6 +34,11 @@ public class MyNetworkManager : NetworkManager
         
     }
 
+    public GameObject[] FindListOfPlayers()
+    {
+        return players;
+    }
+
     /*public GameObject FindLocalPlayerBeforeSpawning()
     {
         StartCoroutine(CheckForPlayer());

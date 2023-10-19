@@ -2,16 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using System;
 
-public class Spawner : MonoBehaviour
+public class GunSpawner : MonoBehaviour
 {
     [SerializeField] GameObject prefab;
+    [SerializeField] List<Transform> spawnLocations; 
+    private Queue<Vector3> spawnPoints = new Queue<Vector3>();
     [SerializeField] float SpawnRate = 10f;
 
     private void Awake()
     {
+        InsertIntoQueue();
+        
+    }
+
+    private void Start()
+    {
         NetworkManager.Singleton.OnServerStarted += StartSpawn;
+    }
+
+    private void InsertIntoQueue()
+    {
+        for(int i = 0; i < spawnLocations.Count; i++)
+        {
+            spawnPoints.Enqueue(spawnLocations[i].position);
+        }
     }
 
     private void StartSpawn()
@@ -32,7 +47,9 @@ public class Spawner : MonoBehaviour
 
     public void StartSpawnServerRpc()
     {
-        GameObject go = Instantiate(prefab, transform.position, transform.rotation);
+        Vector3 temp=spawnPoints.Dequeue();
+        GameObject go = Instantiate(prefab, temp, Quaternion.identity);
+        spawnPoints.Enqueue(temp);
         go.GetComponent<NetworkObject>().Spawn(true);
     }
 
