@@ -43,14 +43,24 @@ public class Health : NetworkBehaviour
         Debug.Log(newValue);
     }
 
+    public void RestoreHealth()
+    {
+        if (IsOwner)
+        {
+            health.Value = maxHealth;
+        }
+    }
+
     [ServerRpc]
     private void DestroyPlayerServerRpc(ServerRpcParams serverRpcParams = default)
     {
         //Destroy(gameObject);
         var clientId = serverRpcParams.Receive.SenderClientId;
-        gameObject.GetComponent<NetworkObject>().Despawn(true);
-        PlayerSpawner.instance.StartSpawn(clientId);
+        //gameObject.GetComponent<NetworkObject>().Despawn(true);
         Debug.Log("spawn is initiated in health");
+        PlayerSpawner.instance.PlayerDespawn(gameObject);
+        PlayerSpawner.instance.StartSpawn(gameObject, clientId);
     }
+    
 }
 

@@ -226,8 +226,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 807382c556d4f2d4cbe5249bb5e91530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunSO: {fileID: 11400000, guid: 2d8200d648864cd47bfc8602d0c82cbf, type: 2}
   canShoot: 1
+  tempGunSO: {fileID: 0}
 --- !u!114 &2813515219710630154
 MonoBehaviour:
   m_ObjectHideFlags: 0
