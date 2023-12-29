@@ -55,11 +55,13 @@ public class Health : NetworkBehaviour
     private void DestroyPlayerServerRpc(ServerRpcParams serverRpcParams = default)
     {
         //Destroy(gameObject);
-        var clientId = serverRpcParams.Receive.SenderClientId;
+        ulong clientId = playerID.ID;
         //gameObject.GetComponent<NetworkObject>().Despawn(true);
         Debug.Log("spawn is initiated in health");
-        PlayerSpawner.instance.PlayerDespawn(gameObject);
-        PlayerSpawner.instance.StartSpawn(gameObject, clientId);
+        FindObjectOfType<PlayerSpawner>().PlayerDespawn(clientId);
+        FindObjectOfType<PlayerSpawner>().StartSpawn(clientId);
+        /*PlayerSpawner.instance.PlayerDespawn(clientId);
+        PlayerSpawner.instance.StartSpawn(clientId);*/
     }
     
 }

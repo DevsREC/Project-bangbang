@@ -5,10 +5,6 @@ using Unity.Netcode;
 
 public class PlayerSpawnerNetwork : NetworkBehaviour
 {
-    private void Start()
-    {
-        
-    }
 
     private GameObject player;
     public void PlayerSwitch(GameObject player)
@@ -24,11 +20,6 @@ public class PlayerSpawnerNetwork : NetworkBehaviour
 
     private void DoThisToSpawnPlayer()
     {
-        if (player == null)
-        {
-            Debug.Log("playe null");
-            return;
-        }
         player.GetComponent<BoxCollider2D>().enabled = true;
         player.GetComponent<PlayerMovement>().enabled = true;
         player.GetComponent<Rigidbody2D>().gravityScale = 1;
