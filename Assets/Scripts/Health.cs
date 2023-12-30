@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.UI;
 
 public class Health : NetworkBehaviour
 {
@@ -9,12 +10,19 @@ public class Health : NetworkBehaviour
         NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private const int maxHealth = 100;
     private PlayerID playerID;
+    private Slider healthBar;
 
     public override void OnNetworkSpawn()
     {
         health.OnValueChanged += HealthChanged; //Subscribing to the health variable's onvaluechanged event
         playerID = GetComponent<PlayerID>();
-        if(IsOwner) health.Value = maxHealth; //Assigns health value as max (as it is the health at spawn)
+        if (IsOwner)
+        {
+            healthBar = FindObjectOfType<Slider>();
+            health.Value = maxHealth;
+            healthBar.value = maxHealth;
+        }
+        //Assigns health value as max (as it is the health at spawn)
     }
 
     public void UpdateHealth(float value,ulong id)
@@ -39,8 +47,13 @@ public class Health : NetworkBehaviour
     //For testing purpose
     private void HealthChanged(float previousValue , float newValue)
     {
-        if(IsOwner)
-        Debug.Log(newValue);
+        if (IsOwner)
+        {
+            Debug.Log(newValue);
+            if(healthBar!=null)
+            healthBar.value = newValue/100;
+        }
+        
     }
 
     public void RestoreHealth()
