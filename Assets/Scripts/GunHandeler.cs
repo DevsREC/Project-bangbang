@@ -54,7 +54,7 @@ public class GunHandeler : NetworkBehaviour
         gunSO = tempGunSO;
         //Destroy(gunObject);
         tempGunSO = null;
-        AssignGunInstance();         
+        AssignGunInstance();        
         reload.AssignMagSize(gunSO.magSize);
         reload.TotalBullets = gunSO.totalBulletsLeft;
         reload.ReloadMag();
@@ -145,6 +145,8 @@ public class GunHandeler : NetworkBehaviour
         bulletInstance =  Instantiate(gunSO.bulletPrefab, transform.position, quaternion);
         return bulletInstance;
     }
+
+
 
     //unused functions
     /*

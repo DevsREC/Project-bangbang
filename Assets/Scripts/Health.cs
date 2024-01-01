@@ -70,7 +70,7 @@ public class Health : NetworkBehaviour
         //Destroy(gameObject);
         ulong clientId = playerID.ID;
         //gameObject.GetComponent<NetworkObject>().Despawn(true);
-        Debug.Log("spawn is initiated in health");
+        Debug.Log("despawn is initiated in health");
         FindObjectOfType<PlayerSpawner>().PlayerDespawn(clientId);
         FindObjectOfType<PlayerSpawner>().StartSpawn(clientId);
         /*PlayerSpawner.instance.PlayerDespawn(clientId);
