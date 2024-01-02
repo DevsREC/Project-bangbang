@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     private GameObject localPlayer;
     private GunHandeler gunHandeler;
     [SerializeField] private GameObject swapButton;
-    [SerializeField] public GameObject reloadButton;
+    [SerializeField] private GameObject reloadButton;
+    [SerializeField] private TextMeshProUGUI bulletsLeftText;
+    [SerializeField] private TextMeshProUGUI totalBulletLeftText;
+    private Reload reloadReference;
     /*private void AssignLocalPlayer()
     {   //Assigns localplayer and gunhandeler
         localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
@@ -27,6 +31,7 @@ public class UIManager : MonoBehaviour
     {
         SwapButtonUpdateFunction();
         ReloadButtonUpdateFunction();
+        UpdateBulletsLeftUI();
     }
 
     private void ReloadButtonUpdateFunction()
@@ -42,9 +47,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void AssignGunHandler()
+    private void UpdateBulletsLeftUI()
+    {
+        reloadReference?.AssignBulletDetails(bulletsLeftText, totalBulletLeftText);
+    }
+    private void AssignPlayerComponents()
     {
         gunHandeler = localPlayer.GetComponent<GunHandeler>();
+        reloadReference = localPlayer.GetComponent<Reload>();
         gunHandeler.Subscribe(reloadButton);
     }
     private void SwapButtonUpdateFunction()
@@ -54,7 +64,7 @@ public class UIManager : MonoBehaviour
         {
             if (localPlayer != null)
             {
-                AssignGunHandler();
+                AssignPlayerComponents();
             }
             return;
         }
