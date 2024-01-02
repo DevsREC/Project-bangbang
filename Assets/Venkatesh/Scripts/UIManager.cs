@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     private GameObject localPlayer;
     private GunHandeler gunHandeler;
     [SerializeField] private GameObject swapButton;
+    [SerializeField] public GameObject reloadButton;
     /*private void AssignLocalPlayer()
     {   //Assigns localplayer and gunhandeler
         localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
@@ -25,8 +26,27 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         SwapButtonUpdateFunction();
+        ReloadButtonUpdateFunction();
     }
 
+    private void ReloadButtonUpdateFunction()
+    {
+        if (gunHandeler == null) return;
+        if(gunHandeler.gunInstance == null)
+        {
+            reloadButton.SetActive(false);
+        }
+        else
+        {
+            reloadButton.SetActive(true);
+        }
+    }
+
+    private void AssignGunHandler()
+    {
+        gunHandeler = localPlayer.GetComponent<GunHandeler>();
+        gunHandeler.Subscribe(reloadButton);
+    }
     private void SwapButtonUpdateFunction()
     {
         //checks whether gunhandeler is null and then checks gunswapossibble then turn on swap button
@@ -34,7 +54,7 @@ public class UIManager : MonoBehaviour
         {
             if (localPlayer != null)
             {
-                gunHandeler = localPlayer.GetComponent<GunHandeler>();
+                AssignGunHandler();
             }
             return;
         }

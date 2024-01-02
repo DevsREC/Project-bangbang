@@ -18,7 +18,7 @@ public class Health : NetworkBehaviour
         playerID = GetComponent<PlayerID>();
         if (IsOwner)
         {
-            healthBar = FindObjectOfType<Slider>();
+            healthBar = GameObject.Find("Healthbar").GetComponent<Slider>();
             health.Value = maxHealth;
             healthBar.value = maxHealth;
         }
@@ -67,14 +67,9 @@ public class Health : NetworkBehaviour
     [ServerRpc]
     private void DestroyPlayerServerRpc(ServerRpcParams serverRpcParams = default)
     {
-        //Destroy(gameObject);
         ulong clientId = playerID.ID;
-        //gameObject.GetComponent<NetworkObject>().Despawn(true);
-        Debug.Log("despawn is initiated in health");
         FindObjectOfType<PlayerSpawner>().PlayerDespawn(clientId);
         FindObjectOfType<PlayerSpawner>().StartSpawn(clientId);
-        /*PlayerSpawner.instance.PlayerDespawn(clientId);
-        PlayerSpawner.instance.StartSpawn(clientId);*/
     }
     
 }

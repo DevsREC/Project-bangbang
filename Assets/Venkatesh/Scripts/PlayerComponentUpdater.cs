@@ -27,7 +27,6 @@ public class PlayerComponentUpdater : MonoBehaviour
     {
         playerSpawner.onPlayerDespawn += ToDespawnPlayer;
         playerSpawner.onPlayerSpawn += ToSpawnPlayer;
-        Debug.Log("subscribed");
     }
 
     private void Unsubscribe()

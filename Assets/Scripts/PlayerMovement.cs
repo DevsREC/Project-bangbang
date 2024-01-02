@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -21,12 +22,14 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float yVelocityLimit=100f;
     private float jumpBoostConsumptionRate=1f;
     private float jumpBoostGrowthRate = 0.8f;
+    private Slider boostSlider;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         //Getting the joystick component 
         if (!IsOwner) return;
+        boostSlider = GameObject.Find("BoostBar").GetComponent<Slider>();
         joyStick = GameObject.Find("Movement Joystick").GetComponent<VariableJoystick>();
         rb = GetComponent<Rigidbody2D>();
         playerFollowCamera = GameObject.FindGameObjectWithTag("Camera").GetComponent<CinemachineVirtualCamera>();
@@ -45,6 +48,12 @@ public class PlayerMovement : NetworkBehaviour
         JumpingAssigner();
         MovePlayerVertically();
         LimitVelocity();
+        BoostBarUpdate();
+    }
+
+    private void BoostBarUpdate()
+    {
+        if(boostSlider != null) boostSlider.value = jumpBoost / 10; 
     }
     private void MovePlayerHorizontally()
     {

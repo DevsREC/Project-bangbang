@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.UI;
 public class GunHandeler : NetworkBehaviour
 {
     private GunSO gunSO;
@@ -12,7 +13,7 @@ public class GunHandeler : NetworkBehaviour
     private Reload reload;
     private bool gunSwapPossible = false;
     [SerializeField] private GunSO tempGunSO;
-    private GunInterface gunInstance;
+    public GunInterface gunInstance;
     private GameObject gunObject;
 
     public bool GunSwapPossible
@@ -28,6 +29,11 @@ public class GunHandeler : NetworkBehaviour
         AssignValues();
         if (IsOwner) { GunSwapServerRpc(); }       
         //tempGunSO = null;
+    }
+
+    public void Subscribe(GameObject reloadButton)
+    {
+        reloadButton.GetComponent<Button>().onClick.AddListener(Reload);
     }
 
     private void AssignValues()
@@ -76,6 +82,12 @@ public class GunHandeler : NetworkBehaviour
                     break;
                 }
         }
+    }
+
+    private void Reload()
+    {
+        reload.ReloadMag();
+        StartCoroutine(DelayShooting(gunSO.reloadTime));
     }
 
     public void Shoot(Vector2 coordinates)

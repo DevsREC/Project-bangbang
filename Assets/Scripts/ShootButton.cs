@@ -26,7 +26,7 @@ public class ShootButton : MonoBehaviour
         if(bulletHandler.canShoot == true)
         {
             if (joyStick.Vertical > 0.75f || joyStick.Horizontal > 0.75f || joyStick.Horizontal < -0.75f || joyStick.Vertical < -0.75f)
-                //Condition to check whether the shoot call is triggered fron joystick
+                //Condition to check whether the shoot call is triggered from joystick
             {
                 if (bulletHandler == null) return;
                 //float angle = joyStick.Vertical / joyStick.Horizontal;

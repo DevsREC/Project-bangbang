@@ -6,8 +6,6 @@ using UnityEngine.Events;
 using System;
 public class PlayerSpawner : NetworkBehaviour //, MonoSingleton<PlayerSpawner>
 {
-    //[SerializeField] private GameObject prefab;
-    //PlayerSpawnerNetwork playerSpawnerNetwork;
     [SerializeField] List<Transform> spawnLocations;
     private Queue<Vector3> spawnPoints;
     [SerializeField] float spawnDelay = 5f;
@@ -44,40 +42,17 @@ public class PlayerSpawner : NetworkBehaviour //, MonoSingleton<PlayerSpawner>
     public void PlayerSpawnClientRpc(Vector3 position , ulong clientId)
     {
         onPlayerSpawn?.Invoke(position, clientId);
-        //DoThisToSpawnPlayer(position , clientId);
-    }
-
-    private void DoThisToSpawnPlayer(Vector3 position, ulong clientId)
-    {
-        GameObject player = FindObjectOfType<MyNetworkManager>().FindListOfPlayers()[clientId];
-        player.transform.position = position;
-        player.GetComponent<BoxCollider2D>().isTrigger = false;
-        player.GetComponent<PlayerMovement>().enabled = true;
-        player.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        player.GetComponent<Health>().RestoreHealth();
     }
 
     public void PlayerDespawn(ulong clientId)
     {
-        Debug.Log("despawn initiated at playerspawner");
         PlayerDespawnClientRpc(clientId);
     }
 
     [ClientRpc]
     public void PlayerDespawnClientRpc(ulong clientId)
     {
-        Debug.Log("despawn initiated at clientrpc");
         onPlayerDespawn?.Invoke(clientId);
-        /*GameObject player = FindObjectOfType<MyNetworkManager>().FindListOfPlayers()[clientId];
-        if (player == null)
-        {
-            return;
-        }
-        player.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        player.GetComponent<BoxCollider2D>().isTrigger = true;
-        player.GetComponent<PlayerMovement>().enabled = false;
-        //player.GetComponent<Rigidbody2D>().gravityScale = 0;
-        //gameObject.SetActive(false);*/
     }
 
     private void InsertIntoQueue()
