@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using TMPro;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject reloadButton;
     [SerializeField] private TextMeshProUGUI bulletsLeftText;
     [SerializeField] private TextMeshProUGUI totalBulletLeftText;
+    [SerializeField] private TextMeshProUGUI timeLeftText;
     private Reload reloadReference;
+    private GameTimer gameTimer;
     /*private void AssignLocalPlayer()
     {   //Assigns localplayer and gunhandeler
         localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
@@ -24,11 +27,22 @@ public class UIManager : MonoBehaviour
     {
         NetworkManager.Singleton.OnClientConnectedCallback += AssignLocalPlayerForClients;
     }
+
+    private void Start()
+    {
+        gameTimer = FindObjectOfType<GameTimer>();
+    }
     private void Update()
     {
         SwapButtonUpdateFunction();
         ReloadButtonUpdateFunction();
         UpdateBulletsLeftUI();
+        UpdateTimeLeftText();
+    }
+
+    private void UpdateTimeLeftText()
+    {
+        timeLeftText.text = gameTimer.timeLeft.Value.ToString();
     }
 
     private void ReloadButtonUpdateFunction()
