@@ -11,6 +11,7 @@ public class Health : NetworkBehaviour
     private const int maxHealth = 100;
     private PlayerID playerID;
     private Slider healthBar;
+    private KillCounter killCounter;
 
     public override void OnNetworkSpawn()
     {
@@ -22,6 +23,7 @@ public class Health : NetworkBehaviour
             health.Value = maxHealth;
             healthBar.value = maxHealth;
         }
+        killCounter = FindObjectOfType<KillCounter>();
         //Assigns health value as max (as it is the health at spawn)
     }
 
@@ -33,15 +35,15 @@ public class Health : NetworkBehaviour
         {
             health.Value = health.Value - value;
         }
-        KillPlayer(); //checks whether the player's health is zero
+        KillPlayer(id); //checks whether the player's health is zero
     }
 
-    private void KillPlayer()
+    private void KillPlayer(ulong killerId)
     {
         if(health.Value <= 0 && IsOwner)
         {
-            Debug.Log("I died "+ playerID);
-            DestroyPlayerServerRpc();
+            Debug.Log("I died "+ playerID +"by " + killerId);
+            DestroyPlayerServerRpc(killerId);
         }
     }
     //For testing purpose
@@ -65,9 +67,11 @@ public class Health : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void DestroyPlayerServerRpc(ServerRpcParams serverRpcParams = default)
+    private void DestroyPlayerServerRpc(ulong killerId , ServerRpcParams serverRpcParams = default)
     {
         ulong clientId = playerID.ID;
+        killCounter?.UpdateKillCount(killerId);
+        killCounter?.UpdateDeathCount(clientId);
         FindObjectOfType<PlayerSpawner>().PlayerDespawn(clientId);
         FindObjectOfType<PlayerSpawner>().StartSpawn(clientId);
     }

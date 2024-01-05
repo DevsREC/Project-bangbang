@@ -22,9 +22,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        //Starts a recusive coroutine that runs every two seconds until it finds a localplayer
-        //StartCoroutine(CheckForPlayer());
-        //NetworkManager.Singleton.OnServerStarted += AssignLocalPlayer;
         NetworkManager.Singleton.OnClientConnectedCallback += AssignLocalPlayerForClients;
     }
     private void Update()
