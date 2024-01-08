@@ -5,7 +5,7 @@ using Unity.Netcode;
 using System;
 public class KillCounter : NetworkBehaviour
 {
-    [SerializeField] List<List<int>> playersKillDeathTable = new List<List<int>>();
+    [SerializeField]public List<List<int>> playersKillDeathTable = new List<List<int>>();
     private void Start()
     {
         AssignFirstPlayerInTable();

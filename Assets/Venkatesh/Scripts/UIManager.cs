@@ -16,6 +16,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeLeftText;
     private Reload reloadReference;
     private GameTimer gameTimer;
+    private KillCounter killCounter;
+    [SerializeField] TextMeshProUGUI[] playersNameInTable;
+    [SerializeField] TextMeshProUGUI[] playersKillInTable;
+    [SerializeField] TextMeshProUGUI[] playersDeathInTable;
+    [SerializeField] GameObject scoreBoardPanel;
     /*private void AssignLocalPlayer()
     {   //Assigns localplayer and gunhandeler
         localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
@@ -31,6 +36,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         gameTimer = FindObjectOfType<GameTimer>();
+        killCounter = FindObjectOfType<KillCounter>();
     }
     private void Update()
     {
@@ -38,6 +44,29 @@ public class UIManager : MonoBehaviour
         ReloadButtonUpdateFunction();
         UpdateBulletsLeftUI();
         UpdateTimeLeftText();
+    }
+
+    private void ScoreBoardPanelUpdate()
+    {
+        for (int i = 0; i < killCounter.playersKillDeathTable.Count; i++)
+        {
+            playersNameInTable[i].text = killCounter.playersKillDeathTable[i][0].ToString();
+            playersKillInTable[i].text = killCounter.playersKillDeathTable[i][1].ToString();
+            playersDeathInTable[i].text = killCounter.playersKillDeathTable[i][2].ToString();
+        }
+    }
+
+    public void ScoreBoardButton()
+    {
+        ScoreBoardPanelUpdate();
+        if (scoreBoardPanel.activeSelf)
+        {
+            scoreBoardPanel.SetActive(false);
+        }
+        else
+        {
+            scoreBoardPanel.SetActive(true);
+        }
     }
 
     private void UpdateTimeLeftText()
