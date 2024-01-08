@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] playersKillInTable;
     [SerializeField] TextMeshProUGUI[] playersDeathInTable;
     [SerializeField] GameObject scoreBoardPanel;
+    [SerializeField] Canvas hudCanvas;
+    [SerializeField] TextMeshProUGUI gameEndedText;
     /*private void AssignLocalPlayer()
     {   //Assigns localplayer and gunhandeler
         localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
@@ -46,7 +48,18 @@ public class UIManager : MonoBehaviour
         UpdateTimeLeftText();
     }
 
-    private void ScoreBoardPanelUpdate()
+    public void HudSwitch(bool value)
+    {
+        hudCanvas.enabled = value;
+        gameEndedText.enabled = true;
+    }
+
+    public void ScoreBoardSwitch(bool value)
+    {
+        scoreBoardPanel.SetActive(value);
+    }
+
+    public void ScoreBoardPanelUpdate()
     {
         for (int i = 0; i < killCounter.playersKillDeathTable.Count; i++)
         {
@@ -61,11 +74,11 @@ public class UIManager : MonoBehaviour
         ScoreBoardPanelUpdate();
         if (scoreBoardPanel.activeSelf)
         {
-            scoreBoardPanel.SetActive(false);
+            ScoreBoardSwitch(false);
         }
         else
         {
-            scoreBoardPanel.SetActive(true);
+            ScoreBoardSwitch(true);
         }
     }
 

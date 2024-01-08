@@ -8,6 +8,7 @@ public class GameTimer : NetworkBehaviour
     [SerializeField] float timeLimit = 10f;
     public NetworkVariable<float> timeLeft = new NetworkVariable<float>(default,
     NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private UIManager uiManager;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -17,6 +18,11 @@ public class GameTimer : NetworkBehaviour
             StartCoroutine(EndGame());
         }
 
+    }
+
+    private void Start()
+    {
+        uiManager = FindObjectOfType<UIManager>();
     }
 
     IEnumerator EndGame()
@@ -37,6 +43,9 @@ public class GameTimer : NetworkBehaviour
 
     private void GameEndedClientRpc()
     {
+        uiManager.ScoreBoardPanelUpdate();
+        uiManager.HudSwitch(false);
+        uiManager.ScoreBoardSwitch(true);
         Debug.Log("Game Ended");
     }
 }
