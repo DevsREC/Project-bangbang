@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject scoreBoardPanel;
     [SerializeField] Canvas hudCanvas;
     [SerializeField] TextMeshProUGUI gameEndedText;
+    [SerializeField] GameObject pausePanel;
     /*private void AssignLocalPlayer()
     {   //Assigns localplayer and gunhandeler
         localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
@@ -51,7 +52,11 @@ public class UIManager : MonoBehaviour
     public void HudSwitch(bool value)
     {
         hudCanvas.enabled = value;
-        gameEndedText.enabled = true;
+    }
+
+    public void GameOverTextSwitch(bool value)
+    {
+        gameEndedText.enabled = value;
     }
 
     public void ScoreBoardSwitch(bool value)
@@ -67,6 +72,18 @@ public class UIManager : MonoBehaviour
             playersKillInTable[i].text = killCounter.playersKillDeathTable[i][1].ToString();
             playersDeathInTable[i].text = killCounter.playersKillDeathTable[i][2].ToString();
         }
+    }
+
+    public void Pause()
+    {
+        HudSwitch(false);
+        pausePanel.SetActive(true);
+    }
+
+    public void Resume()
+    {
+        HudSwitch(true);
+        pausePanel.SetActive(false);
     }
 
     public void ScoreBoardButton()

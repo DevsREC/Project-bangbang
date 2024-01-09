@@ -45,6 +45,7 @@ public class GameTimer : NetworkBehaviour
     {
         uiManager.ScoreBoardPanelUpdate();
         uiManager.HudSwitch(false);
+        uiManager.GameOverTextSwitch(true);
         uiManager.ScoreBoardSwitch(true);
         Debug.Log("Game Ended");
     }
