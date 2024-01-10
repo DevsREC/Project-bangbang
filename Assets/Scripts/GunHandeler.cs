@@ -7,7 +7,6 @@ public class GunHandeler : NetworkBehaviour
 {
     private GunSO gunSO;
     //private Rigidbody2D bulletRigidbody;
-    private GameObject bulletInstance;
     //private Bullet bullet;
     public bool canShoot = true;
     private Reload reload;
@@ -15,6 +14,7 @@ public class GunHandeler : NetworkBehaviour
     [SerializeField] private GunSO tempGunSO;
     public GunInterface gunInstance;
     private GameObject gunObject;
+    private BulletPool bulletPool;
 
     public bool GunSwapPossible
     {
@@ -64,6 +64,7 @@ public class GunHandeler : NetworkBehaviour
         reload.AssignMagSize(gunSO.magSize);
         reload.TotalBullets = gunSO.totalBulletsLeft;
         reload.ReloadMag();
+        bulletPool = GameObject.Find(gunSO.poolName).GetComponent<BulletPool>();
     }
 
     private void AssignGunInstance()
@@ -152,9 +153,11 @@ public class GunHandeler : NetworkBehaviour
 
     //Temporary methods
 
-    public GameObject InstantiateBullet(GameObject bulletPrefab, Vector3 position,Quaternion quaternion)
+    public GameObject InstantiateBullet()
     {
-        bulletInstance =  Instantiate(gunSO.bulletPrefab, transform.position, quaternion);
+        GameObject bulletInstance = bulletPool.GetPooledObject();
+        bulletInstance.SetActive(true);
+            //Instantiate(gunSO.bulletPrefab, transform.position, quaternion);
         return bulletInstance;
     }
 

@@ -34,7 +34,13 @@ public class Bullet : MonoBehaviour
     }
     private void Start()
     {
-        Destroy(gameObject, lifeSpan);
+        StartCoroutine(DeactivateBullet());
+    }
+
+    IEnumerator DeactivateBullet()
+    {
+        yield return new WaitForSecondsRealtime(lifeSpan);
+        gameObject.SetActive(false);
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -53,7 +59,7 @@ public class Bullet : MonoBehaviour
     {
         if (tag == "Ground" || tag == "Wall")
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 

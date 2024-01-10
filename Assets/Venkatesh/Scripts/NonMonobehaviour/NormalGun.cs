@@ -18,12 +18,18 @@ public class NormalGun : GunInterface
         Quaternion quaternion;
         quaternion = CalculateAngle(coordinates);
         //bulletInstance = Instantiate(gunSO.bulletPrefab, origin, quaternion);
-        bulletInstance = gunhandeler.InstantiateBullet(gunSO.bulletPrefab, origin, quaternion); 
+        bulletInstance = gunhandeler.InstantiateBullet();
+        AssignTransform(bulletInstance , origin, quaternion);
         // cannnot call instantiate method so we are calling the temporary method instantiatebullet method from gunhandeler 
         AssignBulletForce(coordinates, bulletInstance , gunSO.bulletSpeed); //Assigns bullet's intial force
         AssignBulletIDAndDamage(clientId , gunSO.damage);
     }
 
+    private void AssignTransform(GameObject bullet , Vector3 position , Quaternion quaternion)
+    {
+        bullet.transform.position = position;
+        bullet.transform.rotation = quaternion;
+    }
     private Quaternion CalculateAngle(Vector2 coordinates)
     {
         //Calculates the angle in which the bullet should be fired

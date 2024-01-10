@@ -18,4 +18,5 @@ public class GunSO : ScriptableObject
     public float reloadTime = 4f;
     public int magSize = 10;
     public int totalBulletsLeft = 40;
+    public string poolName = "BulletPool";
 }

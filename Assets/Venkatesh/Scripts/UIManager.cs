@@ -187,6 +187,11 @@ public class UIManager : MonoBehaviour
         
     }
 
+    private void AssignLocalPlayerForClients(ulong a)
+    {
+        localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
+    }
+
     //unused methods
 
     private void AssignLocalPlayer()
@@ -194,9 +199,5 @@ public class UIManager : MonoBehaviour
         localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
     }
 
-    private void AssignLocalPlayerForClients(ulong a)
-    {
-        localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
-    }
 
 }

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc736bff792e101468ffcf8c5e332664, type: 3}
   m_Name: AssaultRifle
   m_EditorClassIdentifier: 
+  gunType: 0
   bulletPrefab: {fileID: 5499820067286270078, guid: f5170b696a79b13448d89e5d3544f3e0, type: 3}
   bulletSpeed: 30
   UpwardForce: 30
@@ -20,3 +21,4 @@ MonoBehaviour:
   reloadTime: 3
   magSize: 20
   totalBulletsLeft: 100
+  poolName: BulletPool (1)
