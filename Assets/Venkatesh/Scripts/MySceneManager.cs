@@ -30,7 +30,7 @@ public class MySceneManager : NetworkBehaviour
         {
             if (allReady)
             {
-                LoadNextSceneClientRpc();
+                LoadNextScene();
             }
         }
         else
@@ -56,10 +56,9 @@ public class MySceneManager : NetworkBehaviour
      
     }
 
-    [ClientRpc]
-
-    private void LoadNextSceneClientRpc()
+    private void LoadNextScene()
     {
+        NetworkManager.Singleton.SceneManager.LoadScene("CodexScene", LoadSceneMode.Single);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
     }
     private void Update()

@@ -16,7 +16,7 @@ public class PlayerSpawner : NetworkBehaviour //, MonoSingleton<PlayerSpawner>
     public delegate void PlayerSpawnDelegate(Vector3 position , ulong clientId);
     private void Awake()
     {
-        DontDestroyOnLoad(this);
+        //DontDestroyOnLoad(this);
         InsertIntoQueue();
     }
     public void StartSpawn(ulong clientId)

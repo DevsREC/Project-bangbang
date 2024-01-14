@@ -22,7 +22,7 @@ public class GameTimer : NetworkBehaviour
 
     private void Start()
     {
-        uiManager = FindObjectOfType<UIManager>();
+        uiManager = FindObjectOfType<UIManager>();       
     }
 
     IEnumerator EndGame()

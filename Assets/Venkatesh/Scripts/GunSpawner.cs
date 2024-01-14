@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-public class GunSpawner : MonoBehaviour
+public class GunSpawner : NetworkBehaviour
 {
     [SerializeField] GameObject prefab;
     [SerializeField] List<Transform> spawnLocations; 
@@ -13,13 +13,16 @@ public class GunSpawner : MonoBehaviour
     private void Awake()
     {
         InsertIntoQueue();
-        
+        //NetworkManager.Singleton.OnServerStarted += StartSpawn;
+
     }
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        NetworkManager.Singleton.OnServerStarted += StartSpawn;
+        base.OnNetworkSpawn();
+        StartSpawn();
     }
+     //NetworkManager.Singleton.OnServerStarted += StartSpawn;
 
     private void InsertIntoQueue()
     {
@@ -31,18 +34,34 @@ public class GunSpawner : MonoBehaviour
 
     private void StartSpawn()
     {
-        NetworkManager.Singleton.OnServerStarted -= StartSpawn;
-        StartSpawnServerRpc();
+        if (IsServer)
+        {
+            Debug.Log("Subscribed");
+            SpawnGuns();
+        }
+        //NetworkManager.Singleton.OnServerStarted -= StartSpawn;
+        //StartSpawn();
+        //StartCoroutine(DelaySpawner());
+    }
+
+    private void SpawnGuns()
+    {
+        Vector3 temp = spawnPoints.Dequeue();
+        GameObject go = Instantiate(prefab, temp, Quaternion.identity);
+        spawnPoints.Enqueue(temp);
+        go.GetComponent<NetworkObject>().Spawn(true);
         StartCoroutine(DelaySpawner());
+        Debug.Log("Spawning");
     }
 
     IEnumerator DelaySpawner()
     {
         yield return new WaitForSecondsRealtime(SpawnRate);
-        StartSpawnServerRpc();
+        SpawnGuns();
         StartCoroutine(DelaySpawner());
     }
 
+    /*
     [ServerRpc(RequireOwnership =false)]
 
     public void StartSpawnServerRpc()
@@ -51,7 +70,7 @@ public class GunSpawner : MonoBehaviour
         GameObject go = Instantiate(prefab, temp, Quaternion.identity);
         spawnPoints.Enqueue(temp);
         go.GetComponent<NetworkObject>().Spawn(true);
-    }
+    }*/
 
 
 }
