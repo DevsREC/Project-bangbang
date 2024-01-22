@@ -11,7 +11,7 @@ public class PlayerComponentUpdater : MonoBehaviour
     PlayerSpawner playerSpawner;
     Health health;
     PlayerID playerId;
-    private void Awake()
+    private void Start()
     {
         playerId = GetComponent<PlayerID>();
         health = GetComponent<Health>();
@@ -25,8 +25,19 @@ public class PlayerComponentUpdater : MonoBehaviour
 
     private void Subscribe()
     {
-        playerSpawner.onPlayerDespawn += ToDespawnPlayer;
-        playerSpawner.onPlayerSpawn += ToSpawnPlayer;
+        if (playerSpawner == null)
+        {
+            playerSpawner = FindObjectOfType<PlayerSpawner>();
+        }else if(playerSpawner == null)
+        {
+            Subscribe();
+        }
+        else
+        {
+            playerSpawner.onPlayerDespawn += ToDespawnPlayer;
+            playerSpawner.onPlayerSpawn += ToSpawnPlayer;
+        }
+
     }
 
     private void Unsubscribe()

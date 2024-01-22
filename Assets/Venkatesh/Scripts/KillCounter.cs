@@ -6,9 +6,11 @@ using System;
 public class KillCounter : NetworkBehaviour
 {
     [SerializeField]public List<List<int>> playersKillDeathTable = new List<List<int>>();
+
+
     private void Start()
     {
-        AssignFirstPlayerInTable();
+        AssignRemainingPlayersInTable();
         if (NetworkManager.Singleton == null)
         {
             Debug.Log("networkmanager is null");
@@ -28,9 +30,17 @@ public class KillCounter : NetworkBehaviour
         temp1.Add(0);
         playersKillDeathTable.Add(temp1);
         temp1 = null;
+        AssignRemainingPlayersInTable();
+
     }
 
-
+    private void AssignRemainingPlayersInTable()
+    {
+        foreach (ulong i in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            UpdatePlayersList(i);
+        }
+    }
     /*private void Update()
     {
         if (IsServer) 

@@ -28,7 +28,7 @@ public class MySceneManager : NetworkBehaviour
     {
         if (IsServer)
         {
-            if (allReady)
+            if (allReady || networkManager.ConnectedClients.Count <= 1)
             {
                 LoadNextScene();
             }

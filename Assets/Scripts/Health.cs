@@ -70,6 +70,10 @@ public class Health : NetworkBehaviour
     private void DestroyPlayerServerRpc(ulong killerId , ServerRpcParams serverRpcParams = default)
     {
         ulong clientId = playerID.ID;
+        if (killCounter == null)
+        {
+            killCounter = FindObjectOfType<KillCounter>();
+        }
         killCounter?.UpdateKillCount(killerId);
         killCounter?.UpdateDeathCount(clientId);
         FindObjectOfType<PlayerSpawner>().PlayerDespawn(clientId);

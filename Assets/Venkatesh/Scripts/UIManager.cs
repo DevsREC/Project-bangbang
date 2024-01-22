@@ -40,6 +40,7 @@ public class UIManager : MonoBehaviour
     {
         gameTimer = FindObjectOfType<GameTimer>();
         killCounter = FindObjectOfType<KillCounter>();
+        AssignLocalPlayer();
     }
     private void Update()
     {
@@ -66,12 +67,21 @@ public class UIManager : MonoBehaviour
 
     public void ScoreBoardPanelUpdate()
     {
-        for (int i = 0; i < killCounter.playersKillDeathTable.Count; i++)
+        if (killCounter == null)
         {
-            playersNameInTable[i].text = killCounter.playersKillDeathTable[i][0].ToString();
-            playersKillInTable[i].text = killCounter.playersKillDeathTable[i][1].ToString();
-            playersDeathInTable[i].text = killCounter.playersKillDeathTable[i][2].ToString();
+            killCounter = FindObjectOfType<KillCounter>();
+            ScoreBoardPanelUpdate();
         }
+        else
+        {
+            for (int i = 0; i < killCounter.playersKillDeathTable.Count; i++)
+            {
+                playersNameInTable[i].text = killCounter.playersKillDeathTable[i][0].ToString();
+                playersKillInTable[i].text = killCounter.playersKillDeathTable[i][1].ToString();
+                playersDeathInTable[i].text = killCounter.playersKillDeathTable[i][2].ToString();
+            }
+        }
+        
     }
 
     public void Pause()
@@ -101,7 +111,18 @@ public class UIManager : MonoBehaviour
 
     private void UpdateTimeLeftText()
     {
-        timeLeftText.text = gameTimer.timeLeft.Value.ToString();
+        if(gameTimer == null)
+        {
+            gameTimer = FindObjectOfType<GameTimer>();
+        }else if (gameTimer == null)
+        {
+            UpdateTimeLeftText();
+        }
+        else
+        {
+            timeLeftText.text = gameTimer.timeLeft.Value.ToString();
+        }
+        
     }
 
     private void ReloadButtonUpdateFunction()
@@ -135,6 +156,10 @@ public class UIManager : MonoBehaviour
             if (localPlayer != null)
             {
                 AssignPlayerComponents();
+            }
+            else
+            {
+                localPlayer = GameObject.Find("NetworkManager").GetComponent<MyNetworkManager>().FindLocalPlayer();
             }
             return;
         }
@@ -196,7 +221,7 @@ public class UIManager : MonoBehaviour
 
     private void AssignLocalPlayer()
     {
-        localPlayer = FindObjectOfType<MyNetworkManager>().FindLocalPlayer();
+        localPlayer = GameObject.Find("NetworkManager").GetComponent<MyNetworkManager>().FindLocalPlayer();
     }
 
 

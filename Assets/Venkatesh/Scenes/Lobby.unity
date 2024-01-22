@@ -736,6 +736,18 @@ PrefabInstance:
       propertyPath: NetworkConfig.EnableSceneManagement
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2996154321535983348, guid: 940189111867ef84386b5a581374b809, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[4].Prefab
+      value: 
+      objectReference: {fileID: 6612888464268267130, guid: 6bc4be36aab805d43b6331578c0f7ebe, type: 3}
+    - target: {fileID: 2996154321535983348, guid: 940189111867ef84386b5a581374b809, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[0].Override
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2996154321535983348, guid: 940189111867ef84386b5a581374b809, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[0].SourcePrefabToOverride
+      value: 
+      objectReference: {fileID: 394762514785691499, guid: 48082647b391e5941bc5199660505d2e, type: 3}
     - target: {fileID: 2996154321535983350, guid: 940189111867ef84386b5a581374b809, type: 3}
       propertyPath: m_RootOrder
       value: 1

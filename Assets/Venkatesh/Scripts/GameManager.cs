@@ -5,6 +5,15 @@ using Unity.Netcode;
 public class GameManager : NetworkBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject[] Prefabs;
+    /*[SerializeField] private GameObject gameTimerPrefab;
+    [SerializeField] private GameObject gunSpawnerPrefab;
+    [SerializeField] private GameObject playerSpawnerPrefab;*/
+
+    /*private void Awake()
+    {
+        gameObject.GetComponent<NetworkObject>().Spawn();
+    }*/
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -22,6 +31,10 @@ public class GameManager : NetworkBehaviour
             GameObject player = Instantiate(playerPrefab);
             player.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
         }
-
+        for(int i=0; i < Prefabs.Length; i++)
+        {
+            GameObject go = Instantiate(Prefabs[i]);
+            go.GetComponent<NetworkObject>().Spawn();
+        }
     }
 }

@@ -9,6 +9,8 @@ public class GameTimer : NetworkBehaviour
     public NetworkVariable<float> timeLeft = new NetworkVariable<float>(default,
     NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private UIManager uiManager;
+
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();

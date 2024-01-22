@@ -10,17 +10,28 @@ public class GunSpawner : NetworkBehaviour
     private Queue<Vector3> spawnPoints = new Queue<Vector3>();
     [SerializeField] float SpawnRate = 10f;
 
+    /*private void Awake()
+    {
+        
+
+        //NetworkManager.Singleton.OnServerStarted += StartSpawn;
+
+    }*/
     private void Awake()
     {
         InsertIntoQueue();
-        //NetworkManager.Singleton.OnServerStarted += StartSpawn;
+        
 
     }
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         StartSpawn();
+        /*if (IsServer)
+        {
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_onLoadEventCompleted;
+        }*/
+
     }
      //NetworkManager.Singleton.OnServerStarted += StartSpawn;
 
@@ -36,6 +47,7 @@ public class GunSpawner : NetworkBehaviour
     {
         if (IsServer)
         {
+            //gameObject.GetComponent<NetworkObject>().Spawn();
             Debug.Log("Subscribed");
             SpawnGuns();
         }
@@ -54,11 +66,17 @@ public class GunSpawner : NetworkBehaviour
         Debug.Log("Spawning");
     }
 
+    private void SceneManager_onLoadEventCompleted(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode
+        , List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+        SpawnGuns();
+    }
+
     IEnumerator DelaySpawner()
     {
         yield return new WaitForSecondsRealtime(SpawnRate);
         SpawnGuns();
-        StartCoroutine(DelaySpawner());
+        //StartCoroutine(DelaySpawner());
     }
 
     /*
