@@ -36,10 +36,14 @@ public class KillCounter : NetworkBehaviour
 
     private void AssignRemainingPlayersInTable()
     {
-        foreach (ulong i in NetworkManager.Singleton.ConnectedClientsIds)
+        if (IsServer)
         {
-            UpdatePlayersList(i);
+            foreach (ulong i in NetworkManager.Singleton.ConnectedClientsIds)
+            {
+                UpdatePlayersList(i);
+            }
         }
+
     }
     /*private void Update()
     {
