@@ -6,6 +6,7 @@ using System;
 using Unity.Netcode.Transports.UNET;
 using Unity.Netcode.Transports.UTP;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MyNetworkManager : NetworkManager
 {
@@ -22,6 +23,7 @@ public class MyNetworkManager : NetworkManager
     // This is needed to make the port field more convenient. GUILayout.TextField is very limited and we want to be able to clear the field entirely so we can't cache this as ushort.
     string m_PortString = "7777";
     string m_ConnectAddress = "127.0.0.1";
+    const int maxPlayers = 10;
 
     private void Awake()
     {
@@ -91,8 +93,19 @@ public class MyNetworkManager : NetworkManager
         StartHost();
     }
 
-    private void NetworkManager_ConnectionApprovalCallback(ConnectionApprovalRequest arg1, ConnectionApprovalResponse connectionApproval)
+    private void NetworkManager_ConnectionApprovalCallback(ConnectionApprovalRequest arg1, 
+        ConnectionApprovalResponse connectionApproval)
     {
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Lobby")
+        {
+            connectionApproval.Approved = false;
+            return;
+        }
+        if (NetworkManager.Singleton.ConnectedClients.Count >= maxPlayers)
+        {
+            connectionApproval.Approved = false;
+            return;
+        }
         connectionApproval.Approved = true;
         Debug.Log("connection approved");
     }
